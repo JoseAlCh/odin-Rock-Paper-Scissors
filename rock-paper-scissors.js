@@ -1,11 +1,26 @@
 /*rock-paper-scissors*/
+let rockButton = document.getElementById('btn-rock');
+let paperButton = document.getElementById('btn-paper');
+let scissorsButton = document.getElementById('btn-scissors');
+let resultsDiv = document.getElementById('div-results');
+let content = document.createElement('div');
+let playerScore = 0;
+let computerScore = 0;
+let matchCounter = 0;
 
-function getPlayerChoice(){
-    let choice = prompt("Choose: rock, paper or scissors");
-    return choice.toLowerCase();
-}
+  rockButton.addEventListener("click", () => {
+    handleClick('rock')
+ });
+      
+  paperButton.addEventListener("click", () => {
+    handleClick('paper')
+  });
 
-function getComputerChoice(){
+  scissorsButton.addEventListener("click", () => {
+    handleClick('scissors')
+  });
+
+  function getComputerChoice(){
     const max = 4;
     const min = 1;
     const options = ['rock', 'paper', 'scissors'];
@@ -18,7 +33,14 @@ function getComputerChoice(){
     return computerChoice;
 }
 
-function playRound(playerChoice, computerChoice){
+  function handleClick(playerSelection) {
+
+    const computerSelection = getComputerChoice();
+    playRound(playerSelection, computerSelection);
+  }
+
+  function playRound(playerSelection, computerSelection) {
+    
     const options = ['rock', 'paper', 'scissors'];
     
     const posibleResults = [ 
@@ -35,65 +57,60 @@ function playRound(playerChoice, computerChoice){
     the index of computer choice.
     Then the index is stored in a new variable
     */
-    var position1 = options.indexOf(playerChoice);
-    var position2 = options.indexOf(computerChoice);
+    var position1 = options.indexOf(playerSelection);
+    var position2 = options.indexOf(computerSelection);
     
     /*The indexes stored are used to get the result of the round 
     rows are player choices and columns are compuer choices*/
     var playRoundResult = posibleResults[position1][position2];
 
-    return playRoundResult;
-}
-
-function match(){
-    let playerSelection = getPlayerChoice();
-    let computerSelection = getComputerChoice();
-
-    var playRoundScore= playRound(playerSelection, computerSelection);
-
-    return playRoundScore;
-}
-
-/*Executes 5 games*/
-function game(){
-    //Variable to store the match value
-    //1 if player wins, -1 if computer wins, 0 if tie
-    var matchResult;
-
-    //Depending con the result, prints if player or computer wins
-    var finalResult = 0;
-
-    for(let i=0;i<=4;i++){
-        
-        matchResult = match();
-        
-        //Adds score to the finalResult variable
-        if(matchResult=='win'){
-            console.log("Player wins this match");
-            finalResult++;
-        }
-        else if(matchResult=='lose'){
-            console.log("Computer wins this match");
-            finalResult--;
-        }
-        else{
-            console.log("Tie!");
-        }
+    /*DOM*/
+    if(playRoundResult=='win'){ 
+    playerScore++;
+    content.textContent='Player wins this match. Player Score: ' + playerScore +' '  +'Compter Score: ' + computerScore;
+    resultsDiv.appendChild(content);
+    matchCounter++;
+    final();
     }
-
-    //Presents the winner of the game
-    //Player wins if the value is positive
-    //Computer wins if value is negative
-    if(finalResult>0){
-        console.log("Player wins the game");
-    }
-    else if(finalResult<0){
-        console.log("Computer wins the game");
+    else if(playRoundResult=='lose'){
+      computerScore++;
+      content.textContent ='Computer wins this match. Player Score: ' + playerScore +' '  +'Compter Score: ' + computerScore;;
+      resultsDiv.appendChild(content);
+      matchCounter++;
+      final();
     }
     else{
-        console.log("It's a Tie");
+      content.textContent='It\'s a tie! Player Score: ' + playerScore +' '  +'Compter Score: ' + computerScore;
+      resultsDiv.appendChild(content);
+      matchCounter++;
+      final();
     }
-}
+   
+  }
 
-/*Main*/
-game();
+function final(){
+        /*After 5 match, game ends */
+        if(matchCounter==5){
+          if(playerScore > computerScore){
+            content.textContent='Player is the winner. Player Score: ' + playerScore +' '  +'Compter Score: ' + computerScore + ' Click any button for a new game';
+            resultsDiv.appendChild(content);
+            matchCounter = 0;
+            playerScore = 0;
+            computerScore = 0;
+          }
+          else if(playerScore < computerScore){
+            content.textContent='Computer is the winner. Player Score: ' + playerScore +' '  +'Compter Score: ' + computerScore + ' Click any button for a new game';
+            resultsDiv.appendChild(content);
+            matchCounter = 0;
+            playerScore = 0;
+            computerScore = 0;
+          }
+          else{
+            content.textContent='This game is a tie! Player Score: ' + playerScore +' '  +'Compter Score: ' + computerScore + ' Click any button for a new game';
+            resultsDiv.appendChild(content);
+            matchCounter = 0;
+            playerScore = 0;
+            computerScore = 0;
+          }
+        }
+  }
